@@ -12,15 +12,15 @@ program gencrm_lf_f
   }
   
   forval i = 1/$nCatm1 {
-    local arguments "`arguments' f`i'"
+    local arguments "`arguments' t`i'"
   }
-	
+  
   args `arguments'
   
   * tempvars for thresholds
   forval j = 1/$nCatm1 {
     tempvar tau`j'
-    qui gen double `tau`j'' = `f`j''
+    qui gen double `tau`j'' = `t`j''
   }
   
   * setting values for y
@@ -50,9 +50,9 @@ program gencrm_lf_f
     }
 	
 	* build equation for last value of Y
-	local eqn `" ln(1 - invlogit(`tau1' - `xb1')) "'
+	local eqn `" ln(1 - invlogit(`tau1' - `xb_f1')) "'
 	forval o = 2/$nCatm1 {
-      local eqn `" `eqn' + ln(1 - invlogit(`tau`o'' - `xb`o'')) "'
+      local eqn `" `eqn' + ln(1 - invlogit(`tau`o'' - `xb_f`o'')) "'
 	}
 	qui replace `lnf' = `eqn' if $ML_y == `y_`M''
   }

@@ -8,7 +8,7 @@ program gencrm_lf_c
   local arguments "lnf xb_c"
   
   forval i = 1/$nCatm1 {
-    local arguments "`arguments' f`i'"
+    local arguments "`arguments' t`i'"
   }
 	
   args `arguments'
@@ -16,7 +16,7 @@ program gencrm_lf_c
   * tempvars for thresholds
   forval j = 1/$nCatm1 {
     tempvar tau`j'
-    qui gen double `tau`j'' = `f`j''
+    qui gen double `tau`j'' = `t`j''
   }
   
   * setting values for y
