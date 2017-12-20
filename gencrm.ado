@@ -20,7 +20,8 @@ program Estimate, eclass sortpreserve
 		   Level(cilevel)      /// display option for confidence intervals
 		   vce(string)         /// robust and cluster robust standard errors
 		   or EForm            /// exponential form options
-		   svy *               /// -mlopts, display options
+		   noLOg               /// -ml model- options
+		   svy *               /// -mlopts-, display options
 		   ]
 		   
 	* sample selection
@@ -159,7 +160,7 @@ program Estimate, eclass sortpreserve
 		
 		* obtain ML estimates
 		ml model lf gencrm_lf_n `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') maximize  `nolog'
+		  title(`link_title') vce(`vcetype') maximize  `nolog' `mlopts'
 			
 		* replace current b, V, and eqnames matrices
 		tempname b v
@@ -178,7 +179,7 @@ program Estimate, eclass sortpreserve
 	
 		* obtain ML estimates
 		ml model lf gencrm_lf_c `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') maximize `nolog'
+		  title(`link_title') vce(`vcetype') maximize `nolog' `mlopts'
 			
 		* replace current b, V, and eqnames matrices
 		tempname b v
@@ -200,7 +201,7 @@ program Estimate, eclass sortpreserve
 		
 		* obtain ML estimates
 		ml model lf gencrm_lf_f `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') maximize  `nolog'
+		  title(`link_title') vce(`vcetype') maximize  `nolog' `mlopts'
 		
 		* replace current b, V, and eqnames matrices
 		tempname b v
@@ -222,7 +223,7 @@ program Estimate, eclass sortpreserve
 		
 		* obtain ML estimates
 		ml model lf gencrm_lf_p `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') maximize  `nolog'
+		  title(`link_title') vce(`vcetype') maximize  `nolog' `mlopts'
 		
 		* replace current b, V, and eqnames matrices
 		tempname b v
@@ -244,7 +245,7 @@ program Estimate, eclass sortpreserve
 		
 		* obtain ML estimates
 		ml model lf gencrm_lf_cp `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') maximize  `nolog'
+		  title(`link_title') vce(`vcetype') maximize  `nolog' `mlopts'
 		
 		* replace current b, V, and eqnames matrices
 		tempname b v
@@ -266,7 +267,7 @@ program Estimate, eclass sortpreserve
 		
 		* obtain ML estimates
 		ml model lf gencrm_lf_cf `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') maximize  `nolog'
+		  title(`link_title') vce(`vcetype') maximize  `nolog' `mlopts'
 		
 		* replace current b, V, and eqnames matrices
 		tempname b v
@@ -292,7 +293,7 @@ program Estimate, eclass sortpreserve
 		
 		* obtain ML estimates
 		ml model lf gencrm_lf_fp `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') maximize  `nolog'
+		  title(`link_title') vce(`vcetype') maximize  `nolog' `mlopts'
 		
 		* replace current b, V, and eqnames matrices
 		tempname b v
@@ -319,7 +320,7 @@ program Estimate, eclass sortpreserve
 		
 		* obtain ML estimates
 		ml model lf gencrm_lf_cfp `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') maximize  `nolog'
+		  title(`link_title') vce(`vcetype') maximize  `nolog' `mlopts'
 		
 		* replace current b, V, and eqnames matrices
 		tempname b v
@@ -411,4 +412,5 @@ end
 1.2.1  09.20.17  updated exponential form options
 2.0.0  12.18.17  new program name and fixed likelihood functions
 2.0.1  12.19.17  added baseline model with no covariates
+2.0.2  12.20.17  added nolog as default option
 
