@@ -1,0 +1,12 @@
+v 3
+d gencrm Package for generalized continuation ratio models.
+d Program by Shawn Bauldry, Jun Xu, and Andrew Fullerton.
+f gencrm.ado
+f gencrm_lf_n.ado
+f gencrm_lf_c.ado
+f gencrm_lf_p.ado
+f gencrm_lf_f.ado
+f gencrm_lf_cp.ado
+f gencrm_lf_cf.ado
+f gencrm_lf_fp.ado
+f gencrm_lf_cfp.ado

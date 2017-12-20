@@ -1,0 +1,9 @@
+********************************************** begin stata.toc
+v 2.0.0
+d Shawn Bauldry, Purdue University, Department of Sociology
+d Jun Xu, Ball State University, Department of Sociology
+d Andrew Fullerton, Oklahoma State University, Department of Sociology
+d 
+p gencrm A command for generalized continuation ratio models.
+end stata.toc
+********************************************** end stata.toc
