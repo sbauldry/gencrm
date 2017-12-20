@@ -76,6 +76,9 @@ program Estimate, eclass sortpreserve
 		exit 198
 	}
 	
+	* treat nolog as default unless logi is specified
+	if "`log'" == "" local nolog "nolog"
+	
 	* check for display and maximization options
 	_get_diopts diopts options, `options'
 	mlopts mlopts, `options'
@@ -156,7 +159,7 @@ program Estimate, eclass sortpreserve
 		
 		* obtain ML estimates
 		ml model lf gencrm_lf_n `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') maximize
+		  title(`link_title') vce(`vcetype') maximize  `nolog'
 			
 		* replace current b, V, and eqnames matrices
 		tempname b v
@@ -175,7 +178,7 @@ program Estimate, eclass sortpreserve
 	
 		* obtain ML estimates
 		ml model lf gencrm_lf_c `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') maximize
+		  title(`link_title') vce(`vcetype') maximize `nolog'
 			
 		* replace current b, V, and eqnames matrices
 		tempname b v
@@ -197,7 +200,7 @@ program Estimate, eclass sortpreserve
 		
 		* obtain ML estimates
 		ml model lf gencrm_lf_f `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') maximize
+		  title(`link_title') vce(`vcetype') maximize  `nolog'
 		
 		* replace current b, V, and eqnames matrices
 		tempname b v
@@ -219,7 +222,7 @@ program Estimate, eclass sortpreserve
 		
 		* obtain ML estimates
 		ml model lf gencrm_lf_p `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') maximize
+		  title(`link_title') vce(`vcetype') maximize  `nolog'
 		
 		* replace current b, V, and eqnames matrices
 		tempname b v
@@ -241,7 +244,7 @@ program Estimate, eclass sortpreserve
 		
 		* obtain ML estimates
 		ml model lf gencrm_lf_cp `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') maximize
+		  title(`link_title') vce(`vcetype') maximize  `nolog'
 		
 		* replace current b, V, and eqnames matrices
 		tempname b v
@@ -263,7 +266,7 @@ program Estimate, eclass sortpreserve
 		
 		* obtain ML estimates
 		ml model lf gencrm_lf_cf `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') maximize
+		  title(`link_title') vce(`vcetype') maximize  `nolog'
 		
 		* replace current b, V, and eqnames matrices
 		tempname b v
@@ -289,7 +292,7 @@ program Estimate, eclass sortpreserve
 		
 		* obtain ML estimates
 		ml model lf gencrm_lf_fp `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') maximize
+		  title(`link_title') vce(`vcetype') maximize  `nolog'
 		
 		* replace current b, V, and eqnames matrices
 		tempname b v
@@ -316,7 +319,7 @@ program Estimate, eclass sortpreserve
 		
 		* obtain ML estimates
 		ml model lf gencrm_lf_cfp `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') maximize
+		  title(`link_title') vce(`vcetype') maximize  `nolog'
 		
 		* replace current b, V, and eqnames matrices
 		tempname b v
