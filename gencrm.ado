@@ -1,4 +1,4 @@
-*! v2.0.0, S Bauldry, 18dec2017
+*! v2.0.1, S Bauldry, 19dec2017
 
 capture program drop gencrm
 program gencrm, properties(swml svyb svyj svyr mi or eform)
@@ -147,6 +147,23 @@ program Estimate, eclass sortpreserve
 	
 
 	* create ML model statements
+	
+	* case 0: baseline model with no covariates
+	if ( "`free'" == "" & "`prop'" == "" & "`cnIV'" == "" ) {
+		forval i = 1/$nCatm1 {
+			local model "`model' (tau`i': `Y' = )"
+		}
+		
+		* obtain ML estimates
+		ml model lf gencrm_lf_n `model' `wgt' if `touse', ///
+		  title(`link_title') vce(`vcetype') maximize
+			
+		* replace current b, V, and eqnames matrices
+		tempname b v
+		mat `b' = e(b)
+		mat `v' = e(V)
+	}
+	
 	
 	* case 1: all variables with parallel assumption
 	if ( "`free'" == "" & "`prop'" == "" & "`cnIV'" != "" ) {
@@ -390,4 +407,5 @@ end
 1.2.0  09.18.17  fixed bug with non-standard values for Y
 1.2.1  09.20.17  updated exponential form options
 2.0.0  12.18.17  new program name and fixed likelihood functions
+2.0.1  12.19.17  added baseline model with no covariates
 
