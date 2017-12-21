@@ -83,16 +83,16 @@ program gencrm_lf_n
   if ( "$Link" == "cloglog" ) {	
     
 	* equation for first value of Y
-	qui replace `lnf' = ln(1 - exp(-exp(`xb_f1’))) if $ML_y1 == `y_1'
+	qui replace `lnf' = ln(1 - exp(-exp(`xb_f1'))) if $ML_y1 == `y_1'
 		
 	* build equations for middle value of Y
 	forval k = 2/$nCatm1 {
-      local meqn_b `" ln(1 - exp(-exp(`xb_f`k’’))) "'
+      local meqn_b `" ln(1 - exp(-exp(`xb_f`k''))) "'
     
 	  local meqn_a ""
 	  local m = `k' - 1
       forval n = 1/`m' {
-        local meqn_a `" `meqn_a' ln(exp(-exp(`xb_f`n’’))) + "'
+        local meqn_a `" `meqn_a' ln(exp(-exp(`xb_f`n''))) + "'
       }
 	
       local meqn `" `meqn_a' `meqn_b' "'
@@ -100,9 +100,9 @@ program gencrm_lf_n
     }
 	
 	* build equation for last value of Y
-	local eqn `" ln(exp(-exp(`xb_f1’))) "'
+	local eqn `" ln(exp(-exp(`xb_f1'))) "'
 	forval o = 2/$nCatm1 {
-      local eqn `" `eqn' + ln(exp(-exp(`xb_f`o’’))) "'
+      local eqn `" `eqn' + ln(exp(-exp(`xb_f`o''))) "'
 	}
 	qui replace `lnf' = `eqn' if $ML_y1 == `y_`M''
   }
