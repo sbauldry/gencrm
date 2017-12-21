@@ -19,7 +19,7 @@ program Estimate, eclass sortpreserve
 		   LINK(string)        /// link function (logit, probit, or cloglog)
 		   Level(cilevel)      /// display option for confidence intervals
 		   vce(string)         /// robust and cluster robust standard errors
-		   or hr EForm         /// odds ratio and exponential form
+		   or hr EForm         /// odds ratio, hazard ratio, and exponential form
 		   noLOg               /// -ml model- options
 		   svy *               /// -mlopts-, display options
 		   ]
@@ -66,13 +66,6 @@ program Estimate, eclass sortpreserve
 	else if ( "`link'" == "probit" | "`link'" == "p" ) {
 		global Link       "probit"
 		local  link_title "Ordered Probit Estimates"
-		
-		local eform `or' `hr' `eform'
-		local efopt : word count `eform'
-		if `efopt' > 0 {
-			dis as error "exponential form not appropriate with probit link"
-			exit 198
-		}
 	} 
 	else if ( "`link'" == "cloglog" | "`link'" == "c" ) {
 		global Link       "cloglog"
