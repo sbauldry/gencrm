@@ -1,7 +1,7 @@
-*! v2.0.3, S Bauldry, 21dec2017
+*! v2.0.4, S Bauldry, 21dec2017
 
 capture program drop gencrm
-program gencrm, properties(swml svyb svyj svyr mi or eform)
+program gencrm, properties(swml svyb svyj svyr mi)
 	version 15
 	if replay() {
 		if (`"`e(cmd)'"' != "gencrm") error 301
@@ -19,7 +19,6 @@ program Estimate, eclass sortpreserve
 		   LINK(string)        /// link function (logit, probit, or cloglog)
 		   Level(cilevel)      /// display option for confidence intervals
 		   vce(string)         /// robust and cluster robust standard errors
-		   or EForm            /// exponential form options
 		   noLOg               /// -ml model- options
 		   svy *               /// -mlopts-, display options
 		   ]
@@ -66,14 +65,6 @@ program Estimate, eclass sortpreserve
 	else {
 		dis ""
 		dis as error "{yellow}`link'{red} is not a supported link function"
-		exit 198
-	}
-	
-	* exponential form
-	local eform `or' `eform'
-	local efopt : word count `eform'
-	if `efopt' > 1 {
-		dis as error "only one of or or eform can be specified"
 		exit 198
 	}
 	
@@ -159,7 +150,7 @@ program Estimate, eclass sortpreserve
 		ml model lf gencrm_lf_n `model' `wgt' if `touse', ///
 		  title(`link_title') vce(`vcetype') `log' `mlopts' missing maximize
 			
-		* replace current b, V, and eqnames matrices
+		* replace current b, V
 		tempname b v
 		mat `b' = e(b)
 		mat `v' = e(V)
@@ -178,7 +169,7 @@ program Estimate, eclass sortpreserve
 		ml model lf gencrm_lf_c `model' `wgt' if `touse', ///
 		  title(`link_title') vce(`vcetype') `log' `mlopts' missing maximize
 			
-		* replace current b, V, and eqnames matrices
+		* replace current b, V
 		tempname b v
 		mat `b' = e(b)
 		mat `v' = e(V)
@@ -200,7 +191,7 @@ program Estimate, eclass sortpreserve
 		ml model lf gencrm_lf_f `model' `wgt' if `touse', ///
 		  title(`link_title') vce(`vcetype') `log' `mlopts' missing maximize
 		
-		* replace current b, V, and eqnames matrices
+		* replace current b, V
 		tempname b v
 		mat `b' = e(b)
 		mat `v' = e(V)
@@ -222,7 +213,7 @@ program Estimate, eclass sortpreserve
 		ml model lf gencrm_lf_p `model' `wgt' if `touse', ///
 		  title(`link_title') vce(`vcetype') `log' `mlopts' missing maximize
 		
-		* replace current b, V, and eqnames matrices
+		* replace current b, V
 		tempname b v
 		mat `b' = e(b)
 		mat `v' = e(V)
@@ -244,7 +235,7 @@ program Estimate, eclass sortpreserve
 		ml model lf gencrm_lf_cp `model' `wgt' if `touse', ///
 		  title(`link_title') vce(`vcetype') `log' `mlopts' missing maximize
 		
-		* replace current b, V, and eqnames matrices
+		* replace current b, V
 		tempname b v
 		mat `b' = e(b)
 		mat `v' = e(V)
@@ -266,7 +257,7 @@ program Estimate, eclass sortpreserve
 		ml model lf gencrm_lf_cf `model' `wgt' if `touse', ///
 		  title(`link_title') vce(`vcetype') `log' `mlopts' missing maximize
 		
-		* replace current b, V, and eqnames matrices
+		* replace current b, V
 		tempname b v
 		mat `b' = e(b)
 		mat `v' = e(V)
@@ -292,7 +283,7 @@ program Estimate, eclass sortpreserve
 		ml model lf gencrm_lf_fp `model' `wgt' if `touse', ///
 		  title(`link_title') vce(`vcetype') `log' `mlopts' missing maximize
 		
-		* replace current b, V, and eqnames matrices
+		* replace current b, V
 		tempname b v
 		mat `b' = e(b)
 		mat `v' = e(V)
@@ -319,19 +310,12 @@ program Estimate, eclass sortpreserve
 		ml model lf gencrm_lf_cfp `model' `wgt' if `touse', ///
 		  title(`link_title') vce(`vcetype') `log' `mlopts' missing maximize
 		
-		* replace current b, V, and eqnames matrices
+		* replace current b, V
 		tempname b v
 		mat `b' = e(b)
 		mat `v' = e(V)
 	}	
 	
-	* Support for margins
-        * note: not implemented in this version
-	forval i = 1/$nCat {
-		local j = `Yval'[`i',1]
-		local mdflt `mdflt' predict(pr outcome(`j'))
-	}
-
 	* return and display results
 	ereturn scalar k_cat = $nCat
 	ereturn local cmd gencrm
@@ -341,6 +325,7 @@ program Estimate, eclass sortpreserve
 	ereturn local vce "`vce'"
 	ereturn local vceptype "`vcetype'"
 	ereturn local clustvar "`clustervar'"
+	ereturn local predict "gencrm_p"
 	ereturn repost b = `b' V = `v', rename 
 	
 	Replay, level(`level') `eform' `diopts' `options'
@@ -354,7 +339,7 @@ program Replay
 	
 	* display options
 	_get_diopts diopts options, `options'
-	local diopts `diopts' `eform' level(`level') `or' 
+	local diopts `diopts' level(`level') 
 	
 	ml display, `diopts'
 end
@@ -411,4 +396,5 @@ end
 2.0.1  12.19.17  added baseline model with no covariates
 2.0.2  12.20.17  added nolog as default option
 2.0.3  12.21.17  updated ML options
+2.0.4  12.21.17  removed eform option and set predict
 
