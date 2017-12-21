@@ -11,5 +11,6 @@ This repository contains a set of commands for fitting generalized continuation 
 7.  gencrm_lf_cp.ado:  likelihood function mix of constrained and proportionality
 8.  gencrm_lf_fp.ado:  likelihood function mix of free and proportionality
 9.  gencrm_lf_cfp.ado: likelihood function for general model
-10. gencrm.pkg:        Stata package file
-11. stata.toc:         Stata toc file
+10. gencrm_p.ado:      placeholder command for predict
+11. gencrm.pkg:        Stata package file
+12. stata.toc:         Stata toc file
