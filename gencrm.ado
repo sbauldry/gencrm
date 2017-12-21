@@ -334,7 +334,7 @@ program Estimate, eclass sortpreserve
 
 	* return and display results
 	ereturn scalar k_cat = $nCat
-	ereturn local cmd cratreg
+	ereturn local cmd gencrm
 	ereturn local free `free'
 	ereturn local prop `prop'
 	ereturn local link `link'
