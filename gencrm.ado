@@ -1,4 +1,4 @@
-*! v2.0.1, S Bauldry, 19dec2017
+*! v2.0.3, S Bauldry, 21dec2017
 
 capture program drop gencrm
 program gencrm, properties(swml svyb svyj svyr mi or eform)
@@ -157,7 +157,7 @@ program Estimate, eclass sortpreserve
 		
 		* obtain ML estimates
 		ml model lf gencrm_lf_n `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') maximize  `mlopts'
+		  title(`link_title') vce(`vcetype') `log' `mlopts' missing maximize
 			
 		* replace current b, V, and eqnames matrices
 		tempname b v
@@ -176,7 +176,7 @@ program Estimate, eclass sortpreserve
 	
 		* obtain ML estimates
 		ml model lf gencrm_lf_c `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') maximize `mlopts'
+		  title(`link_title') vce(`vcetype') `log' `mlopts' missing maximize
 			
 		* replace current b, V, and eqnames matrices
 		tempname b v
@@ -198,7 +198,7 @@ program Estimate, eclass sortpreserve
 		
 		* obtain ML estimates
 		ml model lf gencrm_lf_f `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') maximize  `mlopts'
+		  title(`link_title') vce(`vcetype') `log' `mlopts' missing maximize
 		
 		* replace current b, V, and eqnames matrices
 		tempname b v
@@ -220,7 +220,7 @@ program Estimate, eclass sortpreserve
 		
 		* obtain ML estimates
 		ml model lf gencrm_lf_p `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') maximize  `mlopts'
+		  title(`link_title') vce(`vcetype') `log' `mlopts' missing maximize
 		
 		* replace current b, V, and eqnames matrices
 		tempname b v
@@ -242,7 +242,7 @@ program Estimate, eclass sortpreserve
 		
 		* obtain ML estimates
 		ml model lf gencrm_lf_cp `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') maximize  `mlopts'
+		  title(`link_title') vce(`vcetype') `log' `mlopts' missing maximize
 		
 		* replace current b, V, and eqnames matrices
 		tempname b v
@@ -264,7 +264,7 @@ program Estimate, eclass sortpreserve
 		
 		* obtain ML estimates
 		ml model lf gencrm_lf_cf `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') maximize  `mlopts'
+		  title(`link_title') vce(`vcetype') `log' `mlopts' missing maximize
 		
 		* replace current b, V, and eqnames matrices
 		tempname b v
@@ -290,7 +290,7 @@ program Estimate, eclass sortpreserve
 		
 		* obtain ML estimates
 		ml model lf gencrm_lf_fp `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') maximize  `mlopts'
+		  title(`link_title') vce(`vcetype') `log' `mlopts' missing maximize
 		
 		* replace current b, V, and eqnames matrices
 		tempname b v
@@ -317,7 +317,7 @@ program Estimate, eclass sortpreserve
 		
 		* obtain ML estimates
 		ml model lf gencrm_lf_cfp `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') maximize  `mlopts'
+		  title(`link_title') vce(`vcetype') `log' `mlopts' missing maximize
 		
 		* replace current b, V, and eqnames matrices
 		tempname b v
@@ -410,4 +410,5 @@ end
 2.0.0  12.18.17  new program name and fixed likelihood functions
 2.0.1  12.19.17  added baseline model with no covariates
 2.0.2  12.20.17  added nolog as default option
+2.0.3  12.21.17  updated ML options
 
