@@ -66,6 +66,12 @@ program Estimate, eclass sortpreserve
 	else if ( "`link'" == "probit" | "`link'" == "p" ) {
 		global Link       "probit"
 		local  link_title "Ordered Probit Estimates"
+		
+		if `efopt' > 0 {
+			dis as error "eform not appropriate for probit model"
+		exit 198
+	}
+		
 	} 
 	else if ( "`link'" == "cloglog" | "`link'" == "c" ) {
 		global Link       "cloglog"
@@ -163,6 +169,7 @@ program Estimate, eclass sortpreserve
 		tempname b v
 		mat `b' = e(b)
 		mat `v' = e(V)
+		local eqno = 0
 	}
 	
 	
@@ -352,11 +359,11 @@ end
 
 capture program drop Replay
 program Replay
-	syntax [, Level(cilevel) or EForm *]
+	syntax [, Level(cilevel) or hr EForm *]
 	
 	* display options
 	_get_diopts diopts options, `options'
-	local diopts `diopts' `eform' level(`level') 
+	local diopts `diopts' `or' `hr' `eform' level(`level') 
 	
 	ml display, `diopts'
 end
