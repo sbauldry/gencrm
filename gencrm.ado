@@ -1,7 +1,7 @@
-*! v2.0.4, S Bauldry, 21dec2017
+*! v2.0.5, S Bauldry, 21dec2017
 
 capture program drop gencrm
-program gencrm, properties(swml svyb svyj svyr mi)
+program gencrm, properties(swml svyb svyj svyr mi or hr eform)
 	version 15
 	if replay() {
 		if (`"`e(cmd)'"' != "gencrm") error 301
@@ -19,6 +19,7 @@ program Estimate, eclass sortpreserve
 		   LINK(string)        /// link function (logit, probit, or cloglog)
 		   Level(cilevel)      /// display option for confidence intervals
 		   vce(string)         /// robust and cluster robust standard errors
+		   or hr EForm         /// odds ratio and exponential form
 		   noLOg               /// -ml model- options
 		   svy *               /// -mlopts-, display options
 		   ]
@@ -49,6 +50,14 @@ program Estimate, eclass sortpreserve
 		exit 2000
 	}
 	
+	* exponential form
+	local eform `or' `hr' `eform'
+	local efopt : word count `eform'
+	if `efopt' > 1 {
+		dis as error "only one of or, hr, eform can be specified"
+		exit 198
+	}
+	
 	* check for link function (default to logit)
 	if ( "`link'" == "logit" | "`link'" == "l" | "`link'" == "" ) {
 		global Link       "logit"
@@ -57,6 +66,13 @@ program Estimate, eclass sortpreserve
 	else if ( "`link'" == "probit" | "`link'" == "p" ) {
 		global Link       "probit"
 		local  link_title "Ordered Probit Estimates"
+		
+		local eform `or' `hr' `eform'
+		local efopt : word count `eform'
+		if `efopt' > 0 {
+			dis as error "exponential form not appropriate with probit link"
+			exit 198
+		}
 	} 
 	else if ( "`link'" == "cloglog" | "`link'" == "c" ) {
 		global Link       "cloglog"
@@ -169,10 +185,11 @@ program Estimate, eclass sortpreserve
 		ml model lf gencrm_lf_c `model' `wgt' if `touse', ///
 		  title(`link_title') vce(`vcetype') `log' `mlopts' missing maximize
 			
-		* replace current b, V
+		* replace current b, V, and number of equations
 		tempname b v
 		mat `b' = e(b)
 		mat `v' = e(V)
+		local eqno = 1
 	}
 	
 	* case 2: all variables with non-parallel assumption
@@ -191,10 +208,11 @@ program Estimate, eclass sortpreserve
 		ml model lf gencrm_lf_f `model' `wgt' if `touse', ///
 		  title(`link_title') vce(`vcetype') `log' `mlopts' missing maximize
 		
-		* replace current b, V
+		* replace current b, V, and number of equations
 		tempname b v
 		mat `b' = e(b)
 		mat `v' = e(V)
+		local eqno = $nCatm1
 	}
 	
 	* case 3: all variables with proportionality assumption
@@ -213,10 +231,11 @@ program Estimate, eclass sortpreserve
 		ml model lf gencrm_lf_p `model' `wgt' if `touse', ///
 		  title(`link_title') vce(`vcetype') `log' `mlopts' missing maximize
 		
-		* replace current b, V
+		* replace current b, V, and number of equations
 		tempname b v
 		mat `b' = e(b)
 		mat `v' = e(V)
+		local eqno = 1
 	}
 	
 	* case 4: subset of variables constrained and proportionality assumption
@@ -235,10 +254,11 @@ program Estimate, eclass sortpreserve
 		ml model lf gencrm_lf_cp `model' `wgt' if `touse', ///
 		  title(`link_title') vce(`vcetype') `log' `mlopts' missing maximize
 		
-		* replace current b, V
+		* replace current b, V, and number of equations
 		tempname b v
 		mat `b' = e(b)
 		mat `v' = e(V)
+		local eqno = 2
 	}
 	
 	* case 5: subset of variables constrained and non-parallel assumption
@@ -257,10 +277,11 @@ program Estimate, eclass sortpreserve
 		ml model lf gencrm_lf_cf `model' `wgt' if `touse', ///
 		  title(`link_title') vce(`vcetype') `log' `mlopts' missing maximize
 		
-		* replace current b, V
+		* replace current b, V, and number of equations
 		tempname b v
 		mat `b' = e(b)
 		mat `v' = e(V)
+		local eqno = $nCatm1 + 1
 	}
 	
 	* case 6: subset of variables proportionality and non-parallel assumption
@@ -283,10 +304,11 @@ program Estimate, eclass sortpreserve
 		ml model lf gencrm_lf_fp `model' `wgt' if `touse', ///
 		  title(`link_title') vce(`vcetype') `log' `mlopts' missing maximize
 		
-		* replace current b, V
+		* replace current b, V, and number of equations
 		tempname b v
 		mat `b' = e(b)
 		mat `v' = e(V)
+		local eqno = $nCatm1 + 1
 	}
 	
 	* case 7: subset of variables with non-parallel assumption and 
@@ -310,14 +332,16 @@ program Estimate, eclass sortpreserve
 		ml model lf gencrm_lf_cfp `model' `wgt' if `touse', ///
 		  title(`link_title') vce(`vcetype') `log' `mlopts' missing maximize
 		
-		* replace current b, V
+		* replace current b, V, and number of equations
 		tempname b v
 		mat `b' = e(b)
 		mat `v' = e(V)
+		local eqno = $nCatm1 + 2
 	}	
 	
 	* return and display results
 	ereturn scalar k_cat = $nCat
+	ereturn scalar k_eform = `eqno'
 	ereturn local cmd gencrm
 	ereturn local free `free'
 	ereturn local prop `prop'
@@ -339,7 +363,7 @@ program Replay
 	
 	* display options
 	_get_diopts diopts options, `options'
-	local diopts `diopts' level(`level') 
+	local diopts `diopts' `eform' level(`level') 
 	
 	ml display, `diopts'
 end
@@ -397,4 +421,5 @@ end
 2.0.2  12.20.17  added nolog as default option
 2.0.3  12.21.17  updated ML options
 2.0.4  12.21.17  removed eform option and set predict
+2.0.5  12.21.17  fixed eform options
 
