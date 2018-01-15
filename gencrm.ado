@@ -1,4 +1,4 @@
-*! v2.0.5, S Bauldry, 21dec2017
+*! v2.0.6, S Bauldry, 15jan2018
 
 capture program drop gencrm
 program gencrm, properties(swml svyb svyj svyr mi or hr eform)
@@ -182,14 +182,15 @@ program Estimate, eclass sortpreserve
 		}
 	
 		* obtain ML estimates
+		local eqno = 1
 		ml model lf gencrm_lf_c `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') `log' `mlopts' missing maximize
+		  title(`link_title') vce(`vcetype') `log' `mlopts' missing ///
+		  waldtest(`eqno') maximize
 			
-		* replace current b, V, and number of equations
+		* replace current b and V
 		tempname b v
 		mat `b' = e(b)
 		mat `v' = e(V)
-		local eqno = 1
 	}
 	
 	* case 2: all variables with non-parallel assumption
@@ -205,14 +206,15 @@ program Estimate, eclass sortpreserve
 		}
 		
 		* obtain ML estimates
+		local eqno = $nCatm1
 		ml model lf gencrm_lf_f `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') `log' `mlopts' missing maximize
+		  title(`link_title') vce(`vcetype') `log' `mlopts' missing ///
+		  waldtest(`eqno') maximize
 		
-		* replace current b, V, and number of equations
+		* replace current b and V
 		tempname b v
 		mat `b' = e(b)
 		mat `v' = e(V)
-		local eqno = $nCatm1
 	}
 	
 	* case 3: all variables with proportionality assumption
@@ -228,14 +230,15 @@ program Estimate, eclass sortpreserve
 		}
 		
 		* obtain ML estimates
+		local eqno = 1
 		ml model lf gencrm_lf_p `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') `log' `mlopts' missing maximize
+		  title(`link_title') vce(`vcetype') `log' `mlopts' missing ///
+		  waldtest(`eqno') maximize
 		
-		* replace current b, V, and number of equations
+		* replace current b and V
 		tempname b v
 		mat `b' = e(b)
 		mat `v' = e(V)
-		local eqno = 1
 	}
 	
 	* case 4: subset of variables constrained and proportionality assumption
@@ -251,14 +254,15 @@ program Estimate, eclass sortpreserve
 		}	
 		
 		* obtain ML estimates
+		local eqno = 2
 		ml model lf gencrm_lf_cp `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') `log' `mlopts' missing maximize
+		  title(`link_title') vce(`vcetype') `log' `mlopts' missing ///
+		  waldtest(`eqno') maximize
 		
-		* replace current b, V, and number of equations
+		* replace current b and V
 		tempname b v
 		mat `b' = e(b)
 		mat `v' = e(V)
-		local eqno = 2
 	}
 	
 	* case 5: subset of variables constrained and non-parallel assumption
@@ -274,14 +278,15 @@ program Estimate, eclass sortpreserve
 		}
 		
 		* obtain ML estimates
+		local eqno = $nCat
 		ml model lf gencrm_lf_cf `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') `log' `mlopts' missing maximize
+		  title(`link_title') vce(`vcetype') `log' `mlopts' missing ///
+		  waldtest(`eqno') maximize
 		
-		* replace current b, V, and number of equations
+		* replace current b and V
 		tempname b v
 		mat `b' = e(b)
 		mat `v' = e(V)
-		local eqno = $nCatm1 + 1
 	}
 	
 	* case 6: subset of variables proportionality and non-parallel assumption
@@ -301,14 +306,15 @@ program Estimate, eclass sortpreserve
 		}
 		
 		* obtain ML estimates
+		local eqno = $nCat
 		ml model lf gencrm_lf_fp `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') `log' `mlopts' missing maximize
+		  title(`link_title') vce(`vcetype') `log' `mlopts' missing ///
+		  waldtest(`eqno') maximize
 		
-		* replace current b, V, and number of equations
+		* replace current b and V
 		tempname b v
 		mat `b' = e(b)
 		mat `v' = e(V)
-		local eqno = $nCatm1 + 1
 	}
 	
 	* case 7: subset of variables with non-parallel assumption and 
@@ -329,14 +335,15 @@ program Estimate, eclass sortpreserve
 		}
 		
 		* obtain ML estimates
+		local eqno = $nCat + 1
 		ml model lf gencrm_lf_cfp `model' `wgt' if `touse', ///
-		  title(`link_title') vce(`vcetype') `log' `mlopts' missing maximize
+		  title(`link_title') vce(`vcetype') `log' `mlopts' missing ///
+		  waldtest(`eqno') maximize
 		
-		* replace current b, V, and number of equations
+		* replace current b and V
 		tempname b v
 		mat `b' = e(b)
 		mat `v' = e(V)
-		local eqno = $nCatm1 + 2
 	}	
 	
 	* return and display results
@@ -422,4 +429,5 @@ end
 2.0.3  12.21.17  updated ML options
 2.0.4  12.21.17  removed eform option and set predict
 2.0.5  12.21.17  fixed eform options
+2.0.6  01.15.18  fixed bug with Wald test
 
