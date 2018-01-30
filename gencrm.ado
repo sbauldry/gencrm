@@ -1,4 +1,4 @@
-*! v2.0.6, S Bauldry, 15jan2018
+*! v2.0.7, S Bauldry, 30jan2018
 
 capture program drop gencrm
 program gencrm, properties(swml svyb svyj svyr mi or hr eform)
@@ -62,6 +62,11 @@ program Estimate, eclass sortpreserve
 	if ( "`link'" == "logit" | "`link'" == "l" | "`link'" == "" ) {
 		global Link       "logit"
 		local  link_title "Ordered Logit Estimates"
+		
+		if "`hr'" != "" {
+			dis as error "hr not appropriate for logit model"
+			exit 198
+		}
 	}
 	else if ( "`link'" == "probit" | "`link'" == "p" ) {
 		global Link       "probit"
@@ -69,7 +74,8 @@ program Estimate, eclass sortpreserve
 		
 		if `efopt' > 0 {
 			dis as error "eform not appropriate for probit model"
-		exit 198
+			exit 198
+		}
 	}
 		
 	} 
@@ -430,4 +436,5 @@ end
 2.0.4  12.21.17  removed eform option and set predict
 2.0.5  12.21.17  fixed eform options
 2.0.6  01.15.18  fixed bug with Wald test
+2.0.7  01.30.18  fixed eform options for inappropriate links
 
