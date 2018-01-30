@@ -53,7 +53,7 @@ program Estimate, eclass sortpreserve
 	* exponential form
 	local eform `or' `hr' `eform'
 	local efopt : word count `eform'
-	if `efopt' > 1 {
+	if (`efopt' > 1) {
 		dis as error "only one of or, hr, eform can be specified"
 		exit 198
 	}
@@ -63,7 +63,7 @@ program Estimate, eclass sortpreserve
 		global Link       "logit"
 		local  link_title "Ordered Logit Estimates"
 		
-		if "`hr'" != "" {
+		if ("`hr'" != "") {
 			dis as error "hr not appropriate for logit model"
 			exit 198
 		}
@@ -72,12 +72,10 @@ program Estimate, eclass sortpreserve
 		global Link       "probit"
 		local  link_title "Ordered Probit Estimates"
 		
-		if `efopt' > 0 {
+		if (`efopt' > 0) {
 			dis as error "eform not appropriate for probit model"
 			exit 198
 		}
-	}
-		
 	} 
 	else if ( "`link'" == "cloglog" | "`link'" == "c" ) {
 		global Link       "cloglog"
