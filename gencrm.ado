@@ -14,7 +14,7 @@ end
 capture program drop Estimate
 program Estimate, eclass sortpreserve
 	syntax varlist(numeric fv) [if] [in] [pweight fweight aweight iweight] [, /// 	       
-		   PRop(varlist fv)    /// vars with proportionality constraint
+		   FActor(varlist fv)  /// vars with proportionality constraint
 		   FRee(varlist fv)    /// vars with no constraint
 		   LINK(string)        /// link function (logit, probit, or cloglog)
 		   Level(cilevel)      /// display option for confidence intervals
@@ -139,15 +139,15 @@ program Estimate, eclass sortpreserve
 	}
 	
 	* prepare proportionality constraint variables
-	if ( "`prop'" != "" ) {
-		fvexpand `prop'
+	if ( "`factor'" != "" ) {
+		fvexpand `factor'
 		local prIV `r(varlist)'
 		
 		* verify subset of IVs
 		local prchk : list local(prIV) - local(cnIV)
 		if ( "`prchk'" != "" ) {
 			dis ""
-			dis as error "prop{yellow}(`prchk'){red} is not included in" ///
+			dis as error "factor{yellow}(`prchk'){red} is not included in" ///
 			             " the list of independent variables: {yellow}`IV'"
 			exit 198
 		}
@@ -160,7 +160,7 @@ program Estimate, eclass sortpreserve
 	* create ML model statements
 	
 	* case 0: baseline model with no covariates
-	if ( "`free'" == "" & "`prop'" == "" & "`cnIV'" == "" ) {
+	if ( "`free'" == "" & "`factor'" == "" & "`cnIV'" == "" ) {
 		forval i = 1/$nCatm1 {
 			local model "`model' (tau`i': `Y' = )"
 		}
@@ -178,7 +178,7 @@ program Estimate, eclass sortpreserve
 	
 	
 	* case 1: all variables with parallel assumption
-	if ( "`free'" == "" & "`prop'" == "" & "`cnIV'" != "" ) {
+	if ( "`free'" == "" & "`factor'" == "" & "`cnIV'" != "" ) {
 		local model "(constrained: `Y' = `cnIV', nocons)"
 	
 		forval i = 1/$nCatm1 {
@@ -198,7 +198,7 @@ program Estimate, eclass sortpreserve
 	}
 	
 	* case 2: all variables with non-parallel assumption
-	if ( "`free'" != "" & "`prop'" == "" & "`cnIV'" == "" ) {
+	if ( "`free'" != "" & "`factor'" == "" & "`cnIV'" == "" ) {
 		local model "(eq1: `Y' = `free', nocons)"
 		
 		forval i = 2/$nCatm1 {
@@ -222,7 +222,7 @@ program Estimate, eclass sortpreserve
 	}
 	
 	* case 3: all variables with proportionality assumption
-	if ( "`free'" == "" & "`prop'" != "" & "`cnIV'" == "" ) {
+	if ( "`free'" == "" & "`factor'" != "" & "`cnIV'" == "" ) {
 		local model "(factor: `Y' = `prIV', nocons)"
 		
 		forval i = 1/$nCatm1 {
@@ -246,7 +246,7 @@ program Estimate, eclass sortpreserve
 	}
 	
 	* case 4: subset of variables constrained and proportionality assumption
-	if ( "`free'" == "" & "`prop'" != "" & "`cnIV'" != "" )  {
+	if ( "`free'" == "" & "`factor'" != "" & "`cnIV'" != "" )  {
 		local model "(constrained: `Y' = `cnIV', nocons) (factor: `prIV', nocons)"
 		
 		forval i = 1/$nCatm1 {
@@ -270,7 +270,7 @@ program Estimate, eclass sortpreserve
 	}
 	
 	* case 5: subset of variables constrained and non-parallel assumption
-	if ( "`free'" != "" & "`prop'" == "" & "`cnIV'" != "" )  {
+	if ( "`free'" != "" & "`factor'" == "" & "`cnIV'" != "" )  {
 		local model "(constrained: `Y' = `cnIV', nocons)"
 		
 		forval i = 1/$nCatm1 {
@@ -294,7 +294,7 @@ program Estimate, eclass sortpreserve
 	}
 	
 	* case 6: subset of variables proportionality and non-parallel assumption
-	if ( "`free'" != "" & "`prop'" != "" & "`cnIV'" == "" )  {
+	if ( "`free'" != "" & "`factor'" != "" & "`cnIV'" == "" )  {
 		local model "(factor: `Y' = `prIV', nocons)"
 		
 		forval i = 1/$nCatm1 {
@@ -323,7 +323,7 @@ program Estimate, eclass sortpreserve
 	
 	* case 7: subset of variables with non-parallel assumption and 
 	*         proportionality assumption
-	if ( "`free'" != "" & "`prop'" != "" & "`cnIV'" != "" )  {
+	if ( "`free'" != "" & "`factor'" != "" & "`cnIV'" != "" )  {
 		local model "(constrained: `Y' = `cnIV', nocons) (factor: `prIV', nocons)"
 		
 		forval i = 1/$nCatm1 {
@@ -355,7 +355,7 @@ program Estimate, eclass sortpreserve
 	ereturn scalar k_eform = `eqno'
 	ereturn local cmd gencrm
 	ereturn local free `free'
-	ereturn local prop `prop'
+	ereturn local factor `factor'
 	ereturn local link `link'
 	ereturn local vce "`vce'"
 	ereturn local vceptype "`vcetype'"
@@ -435,4 +435,5 @@ end
 2.0.5  12.21.17  fixed eform options
 2.0.6  01.15.18  fixed bug with Wald test
 2.0.7  01.30.18  fixed eform options for inappropriate links
+2.0.8  02.16.18  changed name of prop option to factor option
 
