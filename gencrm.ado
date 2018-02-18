@@ -2,7 +2,7 @@
 
 capture program drop gencrm
 program gencrm, properties(swml svyb svyj svyr mi or hr eform)
-	version 15
+	version 14
 	if replay() {
 		if (`"`e(cmd)'"' != "gencrm") error 301
 		Replay `0'
@@ -435,5 +435,6 @@ end
 2.0.5  12.21.17  fixed eform options
 2.0.6  01.15.18  fixed bug with Wald test
 2.0.7  01.30.18  fixed eform options for inappropriate links
-2.0.8  02.16.18  changed name of prop option to factor option
+2.0.8  02.18.18  changed name of prop option to factor option
+2.0.9  02.18.18  set command to work with Stata v14
 
