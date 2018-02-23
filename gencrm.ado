@@ -179,7 +179,7 @@ program Estimate, eclass sortpreserve
 	
 	* case 1: all variables with parallel assumption
 	if ( "`free'" == "" & "`factor'" == "" & "`cnIV'" != "" ) {
-		local model "(constrained: `Y' = `cnIV', nocons)"
+		local model "(parallel: `Y' = `cnIV', nocons)"
 	
 		forval i = 1/$nCatm1 {
 			local model "`model' /tau`i'"
@@ -247,7 +247,7 @@ program Estimate, eclass sortpreserve
 	
 	* case 4: subset of variables constrained and proportionality assumption
 	if ( "`free'" == "" & "`factor'" != "" & "`cnIV'" != "" )  {
-		local model "(constrained: `Y' = `cnIV', nocons) (factor: `prIV', nocons)"
+		local model "(parallel: `Y' = `cnIV', nocons) (factor: `prIV', nocons)"
 		
 		forval i = 1/$nCatm1 {
 			local model "`model' /tau`i'"
@@ -271,7 +271,7 @@ program Estimate, eclass sortpreserve
 	
 	* case 5: subset of variables constrained and non-parallel assumption
 	if ( "`free'" != "" & "`factor'" == "" & "`cnIV'" != "" )  {
-		local model "(constrained: `Y' = `cnIV', nocons)"
+		local model "(parallel: `Y' = `cnIV', nocons)"
 		
 		forval i = 1/$nCatm1 {
 			local model "`model' (eq`i': `free', nocons)"
@@ -324,7 +324,7 @@ program Estimate, eclass sortpreserve
 	* case 7: subset of variables with non-parallel assumption and 
 	*         proportionality assumption
 	if ( "`free'" != "" & "`factor'" != "" & "`cnIV'" != "" )  {
-		local model "(constrained: `Y' = `cnIV', nocons) (factor: `prIV', nocons)"
+		local model "(parallel: `Y' = `cnIV', nocons) (factor: `prIV', nocons)"
 		
 		forval i = 1/$nCatm1 {
 			local model "`model' (eq`i': `free', nocons)"
@@ -437,4 +437,5 @@ end
 2.0.7  01.30.18  fixed eform options for inappropriate links
 2.0.8  02.18.18  changed name of prop option to factor option
 2.0.9  02.18.18  set command to work with Stata v14
+2.0.10 02.23.18  relabeled constrained as parallel
 
