@@ -2,7 +2,7 @@
 
 capture program drop gencrm
 program gencrm, properties(swml svyb svyj svyr mi or hr eform)
-	version 14
+	version 15
 	if replay() {
 		if (`"`e(cmd)'"' != "gencrm") error 301
 		Replay `0'
@@ -438,4 +438,5 @@ end
 2.0.8  02.18.18  changed name of prop option to factor option
 2.0.9  02.18.18  set command to work with Stata v14
 2.0.10 02.23.18  relabeled constrained as parallel
+2.0.11 02.23.18  reset command to Stata v15 (display format issue)
 
