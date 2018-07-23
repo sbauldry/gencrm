@@ -12,3 +12,4 @@ f gencrm_lf_fp.ado
 f gencrm_lf_cfp.ado
 f gencrm_p.ado
 f gencrm.sthlp
+f gencrm-gss-data.dta
